@@ -15,7 +15,7 @@ suma_opadow = None
 
 if data:
     try:
-        searched_date = datetime.datetime.strptime(data, "%Y-%m-%d")
+        searched_date = datetime.datetime.strptime(data, "%Y-%m-%d").date()
     except:
         print("Podano złą datę.")
         searched_date = datetime.date.today() + datetime.timedelta(days=1)
