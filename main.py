@@ -11,8 +11,6 @@ url = "https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={lon
 longitude = 20.490189
 latitude = 53.770226
 
-suma_opadow = None
-
 if data:
     try:
         searched_date = datetime.datetime.strptime(data, "%Y-%m-%d").date()
@@ -30,25 +28,23 @@ if not os.path.exists('opady.txt'):
 
 with open("opady.txt", 'r') as f:
     odczyt = f.readlines()
-    for line in odczyt:
-        if line.split()[0] == str(searched_date):
-            if float(line.split()[1]) == 0:
-                print("Nie będzie padać.")
-            elif float(line.split()[1]) > 0:
-                print("Będzie padać.")
-        else:
-            resp = requests.get(url.format(latitude=latitude, longitude=longitude, searched_date=searched_date)).\
-                json()
-            suma_opadow = resp['daily']['rain_sum']
-            if suma_opadow[0] == 0:
-                print("Nie będzie padać.")
-            elif suma_opadow[0] > 0:
-                print("Będzie padać.")
-            else:
-                print("Nie wiem.")
-            break
 
-if suma_opadow:
+for line in odczyt:
+    if line.split()[0] == str(searched_date):
+        suma_opadow = float(line.split()[1])
+
+else:
+    resp = requests.get(url.format(latitude=latitude, longitude=longitude, searched_date=searched_date)).\
+        json()
+    suma_opadow = resp['daily']['rain_sum']
     with open("opady.txt", 'a') as f:
         f.write(str(searched_date) + " " + str(suma_opadow[0]) + "\n")
+
+if suma_opadow[0] == 0:
+    print("Nie będzie padać.")
+elif suma_opadow[0] > 0:
+    print("Będzie padać.")
+else:
+    print("Nie wiem.")
+
 
