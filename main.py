@@ -32,17 +32,18 @@ with open("opady.txt", 'r') as f:
 for line in odczyt:
     if line.split()[0] == str(searched_date):
         suma_opadow = float(line.split()[1])
+        break
 
 else:
     resp = requests.get(url.format(latitude=latitude, longitude=longitude, searched_date=searched_date)).\
         json()
-    suma_opadow = resp['daily']['rain_sum']
+    suma_opadow = resp['daily']['rain_sum'][0]
     with open("opady.txt", 'a') as f:
-        f.write(str(searched_date) + " " + str(suma_opadow[0]) + "\n")
+        f.write(str(searched_date) + " " + str(suma_opadow) + "\n")
 
-if suma_opadow[0] == 0:
+if suma_opadow == 0:
     print("Nie będzie padać.")
-elif suma_opadow[0] > 0:
+elif suma_opadow > 0:
     print("Będzie padać.")
 else:
     print("Nie wiem.")

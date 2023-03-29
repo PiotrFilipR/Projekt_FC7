@@ -22,12 +22,13 @@ class WeatherForecast:
         for line in odczyt: ###### Nie czyta tego!
             if line.split()[0] == str(self.searched_date):
                 suma_opadow = float(line.split()[1])
+                break
         else:
             resp = requests.get(url.format(latitude=latitude, longitude=longitude, searched_date=searched_date)). \
                 json()
-            suma_opadow = resp['daily']['rain_sum']
+            suma_opadow = resp['daily']['rain_sum'][0]
             with open("opady.txt", 'a') as f:
-                f.write(str(self.searched_date) + " " + str(suma_opadow[0]) + "\n")
+                f.write( "\n" + str(self.searched_date) + " " + str(suma_opadow))
 
         self.opady[self.searched_date] = suma_opadow
 
@@ -76,15 +77,14 @@ print(f'W dniu {searched_date}, suma opadów będzie wynosiła: ', weather_forec
 print()
 print(weather_forecast.items())
 print()
-print(weather_forecast)
 
-# print("\nDrukowanie dat:")
-#
-# for record in prognoza:
-#     print(record)
-#
-# print("\nDrukowanie kluczy i wartości:")
-# for a, b in prognoza.items():
-#     print(a, b)
+print("\nDrukowanie dat:")
+
+for record in weather_forecast:
+    print(record)
+
+print("\nDrukowanie kluczy i wartości:")
+for a, b in weather_forecast.items():
+    print(a, b)
 
 
